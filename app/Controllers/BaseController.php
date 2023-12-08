@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\CLIRequest;
 use CodeIgniter\HTTP\IncomingRequest;
@@ -21,6 +22,8 @@ use Psr\Log\LoggerInterface;
  */
 abstract class BaseController extends Controller
 {
+    use ResponseTrait;
+
     /**
      * Instance of the main Request object.
      *
@@ -54,5 +57,16 @@ abstract class BaseController extends Controller
         // Preload any models, libraries, etc, here.
 
         // E.g.: $this->session = \Config\Services::session();
+    }
+
+    public function respondWith(bool $ok = true, string $message = null, $data = null, int $statusCode = 200)
+    {
+        $response = [
+            'ok' => $ok,
+            'message' => $message,
+            'data' => $data,
+        ];
+
+        return $this->respond($response, $statusCode);
     }
 }
